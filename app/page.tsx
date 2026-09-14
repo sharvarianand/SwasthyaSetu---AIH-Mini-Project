@@ -1,12 +1,15 @@
 "use client";
 
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
+import RiskAssessment from "@/components/RiskAssessment";
+import VitalsTracker from "@/components/VitalsTracker";
+import MLClassifier from "@/components/MLClassifier";
 import { AuthControls } from "@/components/AuthControls";
 import { VoiceSymptomInput } from "@/components/VoiceSymptomInput";
 import { translations, Language } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 
-type View = "home" | "library" | "symptoms" | "emergency" | "reports" | "directory" | "worker";
+type View = "home" | "library" | "symptoms" | "emergency" | "reports" | "directory" | "worker" | "risk" | "vitals" | "ml";
 
 function Icon({ children }: { children: string }) { return <span className="icon" aria-hidden>{children}</span>; }
 
@@ -44,7 +47,7 @@ export default function Home() {
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.slice(1);
-      if (["home", "library", "symptoms", "emergency", "reports", "directory", "worker"].includes(hash)) {
+      if (["home", "library", "symptoms", "emergency", "reports", "directory", "worker", "risk", "vitals", "ml"].includes(hash)) {
         setView(hash as View);
       } else {
         setView("home");
@@ -152,6 +155,9 @@ export default function Home() {
     {view === "reports" && <Reports t={t} nav={nav} text={reportsText} setText={setReportsText} />}
     {view === "directory" && <Directory t={t} nav={nav} />}
     {view === "worker" && <Worker t={t} nav={nav} />}
+    {view === "risk" && <RiskView nav={nav} t={t} />}
+    {view === "vitals" && <VitalsView nav={nav} t={t} />}
+    {view === "ml" && <MLView nav={nav} t={t} />}
     
     <footer>Offline-first prototype · Keep local centre numbers verified · Never delay emergency care</footer>
   </main>;
@@ -163,6 +169,9 @@ function HomeView({ t, nav, startDemo, startTour }: { t: any; nav: (v: View) => 
   const cards: [View, string, string, string][] = [
     ["emergency", "🚨", t.emergency, t.emergencyDangerText.substring(0, 40) + "..."], 
     ["symptoms", "♡", t.symptoms, t.symptomsSubtitle.substring(0, 40) + "..."], 
+    ["risk", "🧪", "Risk Assessment", "CKD & Diabetes risk using clinical AI models"], 
+    ["vitals", "📈", "Vitals Tracker", "Log & chart BP, sugar, weight, SpO₂ over time"],
+    ["ml", "🧠", "AI Triage (Neural Net)", "In-browser TF.js model trained on WHO guidelines"],
     ["library", "▤", t.library, t.librarySubtitle], 
     ["reports", "⌁", t.reports, t.reportsSubtitle || "Explanations of tests"], 
     ["directory", "⌖", t.directory, t.directoryText.substring(0, 40) + "..."], 
@@ -411,4 +420,52 @@ function Worker({ nav, t }: { nav: (v: View) => void, t: any }) {
     </form>
     {saved && <div className="result"><h2>{t.workerSavedTitle}</h2><p>{status}</p><p>{t.workerSavedNotice}</p></div>}
   </section>; 
+}
+
+function RiskView({ nav, t }: { nav: (v: View) => void; t: any }) {
+  return (
+    <section className="content page">
+      <Back nav={nav} t={t} />
+      <p className="eyebrow">Clinical AI Tools</p>
+      <h1>Disease Risk Assessment</h1>
+      <p style={{ marginBottom: "1.5rem", fontSize: "0.92rem", color: "var(--muted)" }}>
+        Evidence-based risk calculators using validated clinical formulas — CKD-EPI (2021) for kidney disease and FINDRISC for diabetes. Results work fully offline.
+      </p>
+      <RiskAssessment />
+      <div className="notice" style={{ marginTop: "1.5rem" }}>
+        These tools are for screening and educational purposes only. They do not replace a clinical diagnosis. Always consult a qualified healthcare professional.
+      </div>
+    </section>
+  );
+}
+
+function VitalsView({ nav, t }: { nav: (v: View) => void; t: any }) {
+  return (
+    <section className="content page">
+      <Back nav={nav} t={t} />
+      <p className="eyebrow">Personal Health Monitoring</p>
+      <h1>Vitals Tracker</h1>
+      <p style={{ marginBottom: "1.5rem", fontSize: "0.92rem", color: "var(--muted)" }}>
+        Log blood pressure, blood sugar, weight and SpO₂ over time. Your data stays on this device — completely private and offline.
+      </p>
+      <VitalsTracker />
+    </section>
+  );
+}
+
+function MLView({ nav, t }: { nav: (v: View) => void; t: any }) {
+  return (
+    <section className="content page">
+      <Back nav={nav} t={t} />
+      <p className="eyebrow">Offline AI · TensorFlow.js</p>
+      <h1>AI Symptom Triage</h1>
+      <p style={{ marginBottom: "1.5rem", fontSize: "0.92rem", color: "var(--muted)" }}>
+        A neural network trained <strong>live in your browser</strong> on WHO &amp; ICMR clinical triage guidelines. After training, all inference runs 100% offline — no server, no API.
+      </p>
+      <MLClassifier />
+      <div className="notice" style={{ marginTop: "1.5rem" }}>
+        This is an educational AI model. It does not replace clinical judgment. Always seek professional medical advice for health decisions.
+      </div>
+    </section>
+  );
 }
