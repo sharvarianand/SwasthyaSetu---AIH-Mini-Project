@@ -1,4 +1,4 @@
-const CACHE = "swasthya-setu-v3";
+const CACHE = "swasthya-setu-v4";
 const CORE = ["/manifest.webmanifest", "/icon.svg", "/rural-health-hero.png"];
 
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting())));
