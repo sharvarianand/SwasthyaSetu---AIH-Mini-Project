@@ -1,7 +1,4 @@
-<div align="center">
-  <img src="public/favicon.png" alt="SwasthyaSetu Icon" width="120" />
-  <h1>SwasthyaSetu</h1>
-</div>
+# ![SwasthyaSetu Icon](./public/favicon.png) SwasthyaSetu
 
 An offline-first, multilingual rural healthcare guidance and referral PWA. It intentionally provides education, emergency escalation, and explainable symptom safety rules—not disease diagnosis or treatment.
 
