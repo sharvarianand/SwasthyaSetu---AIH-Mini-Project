@@ -62,7 +62,7 @@ export default function Home() {
     window.location.hash = next;
   };
 
-  const [demoActive, setDemoActive] = useState<"ckd" | "standard" | null>(null);
+  const [demoActive, setDemoActive] = useState<"ckd" | "standard" | "ai" | null>(null);
   const [demoStepMessage, setDemoStepMessage] = useState("");
   const [chosenSymptoms, setChosenSymptoms] = useState<string[]>([]);
   const [symptomResult, setSymptomResult] = useState(false);
@@ -112,13 +112,27 @@ export default function Home() {
       }
     };
 
+    const runAiDemo = () => {
+      if (step === 0) {
+        setDemoStepMessage("Starting AI Triage Demo: Let's jump to the Neural Net...");
+        timeoutId = setTimeout(() => { step++; nav("ml"); runAiDemo(); }, 2500);
+      } else if (step === 1) {
+        setDemoStepMessage("Notice how you can train a model right in your browser (no servers involved).");
+        timeoutId = setTimeout(() => { step++; runAiDemo(); }, 4000);
+      } else if (step === 2) {
+        setDemoStepMessage("AI Triage Demo complete! Try running the inference yourself.");
+        timeoutId = setTimeout(() => { setDemoActive(null); }, 4000);
+      }
+    };
+
     if (demoActive === "ckd") runCkdDemo();
     else if (demoActive === "standard") runStandardDemo();
+    else if (demoActive === "ai") runAiDemo();
 
     return () => clearTimeout(timeoutId);
   }, [demoActive]);
 
-  const startDemo = (type: "ckd" | "standard") => {
+  const startDemo = (type: "ckd" | "standard" | "ai") => {
     setChosenSymptoms([]);
     setSymptomResult(false);
     setReportsText("");
@@ -130,7 +144,10 @@ export default function Home() {
     { target: '.language', content: 'You can change the language of the entire app here at any time. It works completely offline.' },
     { target: '.card.urgent', content: 'The Emergency button is always highlighted. It shows critical danger signs to watch for.' },
     { target: '.primary', content: 'This starts the Symptom Guidance flow, which is the core feature of the app.' },
-    { target: '.demo-actions', content: 'Use these automatic demos to see how the app handles different health scenarios.' }
+    { target: '.demo-actions', content: 'Use these automatic demos to see how the app handles different health scenarios.' },
+    { target: '.card-risk', content: 'NEW: CKD & Diabetes Risk Assessment powered by validated clinical AI algorithms.' },
+    { target: '.card-vitals', content: 'NEW: Track and chart your vital signs locally on your device.' },
+    { target: '.card-ml', content: 'NEW: Offline AI Triage using a Neural Network that runs entirely in your browser!' }
   ];
 
   return <main>
@@ -165,7 +182,7 @@ export default function Home() {
 
 function Back({ nav, t }: { nav: (v: View) => void, t: any }) { return <button className="back" onClick={() => nav("home")}>{t.backToHome}</button>; }
 
-function HomeView({ t, nav, startDemo, startTour }: { t: any; nav: (v: View) => void; startDemo: (type: "ckd" | "standard") => void; startTour: () => void }) {
+function HomeView({ t, nav, startDemo, startTour }: { t: any; nav: (v: View) => void; startDemo: (type: "ckd" | "standard" | "ai") => void; startTour: () => void }) {
   const cards: [View, string, string, string][] = [
     ["emergency", "🚨", t.emergency, t.emergencyDangerText.substring(0, 40) + "..."], 
     ["symptoms", "♡", t.symptoms, t.symptomsSubtitle.substring(0, 40) + "..."], 
@@ -189,6 +206,7 @@ function HomeView({ t, nav, startDemo, startTour }: { t: any; nav: (v: View) => 
           <div className="demo-actions" style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
             <button className="secondary" style={{background: 'transparent', border: '1px solid var(--border)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem'}} onClick={() => startDemo("ckd")}>{t.playCkd}</button>
             <button className="secondary" style={{background: 'transparent', border: '1px solid var(--border)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem'}} onClick={() => startDemo("standard")}>{t.playStandard}</button>
+            <button className="secondary" style={{background: '#f0fdf4', border: '1px solid #86efac', color: '#15803d', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold'}} onClick={() => startDemo("ai")}>▶ Play AI Demo</button>
             <button className="secondary" style={{background: '#f0f4f8', border: '1px solid #cce0ff', color: '#0055cc', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem'}} onClick={startTour}>{t.playTour}</button>
           </div>
         </div>
@@ -202,7 +220,7 @@ function HomeView({ t, nav, startDemo, startTour }: { t: any; nav: (v: View) => 
       <h2>{t.choose}</h2>
       <div className="card-grid">
         {cards.map(([view, icon, title, text]) => 
-          <button className={view === "emergency" ? "card urgent" : "card"} key={view} onClick={() => nav(view)}>
+          <button className={`card card-${view} ${view === "emergency" ? "urgent" : ""}`} key={view} onClick={() => nav(view)}>
             <Icon>{icon}</Icon><strong>{title}</strong><span>{text}</span><b>{t.open}</b>
           </button>
         )}
