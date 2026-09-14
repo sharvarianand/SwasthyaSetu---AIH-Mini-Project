@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" rx="48" fill="#0d6b62"/><path fill="white" d="M108 48h40v60h60v40h-60v60h-40v-60H48v-40h60z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Background with rounded corners -->
+  <rect width="256" height="256" rx="52" fill="#0d6b62"/>
+  <!-- Subtle inner glow ring -->
+  <rect width="256" height="256" rx="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+  <!-- Medical cross -->
+  <rect x="104" y="52" width="48" height="152" rx="10" fill="white"/>
+  <rect x="52" y="104" width="152" height="48" rx="10" fill="white"/>
+  <!-- Bridge arc below cross (subtle, represents "Setu" = bridge) -->
+  <path d="M72 196 Q128 168 184 196" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="7" stroke-linecap="round"/>
+</svg>
