@@ -1,17 +1,20 @@
-# SwasthyaSetu
+<div align="center">
+  <img src="public/favicon.png" alt="SwasthyaSetu Icon" width="120" />
+  <h1>SwasthyaSetu</h1>
+</div>
 
 An offline-first, multilingual rural healthcare guidance and referral PWA. It intentionally provides education, emergency escalation, and explainable symptom safety rules—not disease diagnosis or treatment.
 
 ## Features
 
-- English, Marathi, and Hindi interface
-- Health library, symptom guidance, emergency danger-sign screen, and report-term explainer
-- Health-worker referral note saved locally in the browser
-- PWA manifest and service worker for installability and cached local use
-- Optional Google sign-in with Better Auth and Supabase PostgreSQL patient-history storage
-- Browser voice input for English symptom phrases, where supported
-
-## Run
+- **Multilingual:** English, Marathi, and Hindi interfaces.
+- **Offline-First PWA:** Works entirely without internet after the first load via Service Workers.
+- **AI Triage (TensorFlow.js):** In-browser neural network for symptom urgency classification.
+- **Risk Assessment:** Clinical algorithms (CKD-EPI for Kidney Disease, FINDRISC for Diabetes).
+- **Vitals Tracker:** Local, private tracking of BP, Sugar, Weight, and SpO2 with trend charts.
+- **Voice Input:** Web Speech API for low-literacy users to speak symptoms.
+- **Authentication:** Optional Google sign-in with Supabase PostgreSQL patient-history storage.
+- **Interactive Tour:** Built-in automated demos and app tours for ASHA workers.
 
 ```powershell
 npm install
